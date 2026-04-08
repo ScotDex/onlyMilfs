@@ -3,8 +3,8 @@ const path = require('path');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('romulus')
-        .setDescription('Romulus clip'),
+        .setName('gods')
+        .setDescription(''),
 
     async execute(interaction) {
         const file = path.join(__dirname, '..', 'assets', 'clips', 'gods.gif');

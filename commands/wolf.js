@@ -3,12 +3,12 @@ const path = require('path');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('romulus')
-        .setDescription('Romulus clip'),
+        .setName('wolf')
+        .setDescription('wolf clip'),
 
     async execute(interaction) {
-        const file = path.join(__dirname, '..', 'assets', 'clips', 'romulus.gif');
-        const attachment = new AttachmentBuilder(file, { name: 'romulus.gif' });
+        const file = path.join(__dirname, '..', 'assets', 'clips', 'wolf.gif');
+        const attachment = new AttachmentBuilder(file, { name: 'wolf.gif' });
         await interaction.reply({ files: [attachment] });
     }
 };

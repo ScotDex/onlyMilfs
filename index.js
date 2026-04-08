@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits, Collection } = require('discord.js')
+const { Client, GatewayIntentBits, Collection, Events } = require('discord.js')
 const fs = require('fs');
 const path = require('path');
 const http = require('http');
@@ -24,12 +24,16 @@ const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'))
 
 for (const file of commandFiles) {
-    const command = require(path.join(commandsPath, file));
-    if ('data' in command && 'execute' in command) {
-        client.commands.set(command.data.name, command);
-        console.log(`Successfully loaded command: ${command.data.name}`);
-    } else {
-        console.log(`[WARNING] The command at ${file} is missing a required "data" or "execute" property.`);
+    try {
+        const command = require(path.join(commandsPath, file));
+        if ('data' in command && 'execute' in command) {
+            client.commands.set(command.data.name, command);
+            console.log(`Successfully loaded command: ${command.data.name}`);
+        } else {
+            console.log(`[WARNING] The command at ${file} is missing a required "data" or "execute" property.`);
+        }
+    } catch (err) {
+        console.error(`[ERROR] Failed to load command file ${file}:`, err);
     }
 }
 
@@ -45,12 +49,16 @@ client.on('interactionCreate', async (interaction) => {
     try {
         await command.execute(interaction);
     } catch (error) {
-        console.error(`Error executing command ${command.name}:`, error);
-        const reply = { content: `Error executing command ${command.name}` }
-        if (interaction.replied || interaction.deferred) {
-            await interaction.followUp(reply);
-        } else {
-            await interaction.reply(reply);
+        console.error(`Error executing command ${command.data.name}:`, error);
+        const reply = { content: `Error executing command ${command.data.name}`, ephemeral: true };
+        try {
+            if (interaction.replied || interaction.deferred) {
+                await interaction.followUp(reply);
+            } else {
+                await interaction.reply(reply);
+            }
+        } catch (replyErr) {
+            console.error(`Failed to send error reply for ${command.data.name}:`, replyErr);
         }
     }
 });
@@ -68,7 +76,7 @@ http.createServer((req, res) => {
 
 // Bot Ready Event
 
-client.once('clientReady', () => {
+client.once(Events.ClientReady, () => {
     console.log(`Logged in as ${client.user.tag}! CTRL + C to exit`);
     console.log(`${client.commands.size} commands loaded`);
 });

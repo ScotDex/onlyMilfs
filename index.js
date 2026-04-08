@@ -56,6 +56,7 @@ client.on('interactionCreate', async (interaction) => {
 });
 
 // Health Checker *Possibly Unnecessary*
+
 const port = process.env.PORT || 8080;
 http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
@@ -65,15 +66,20 @@ http.createServer((req, res) => {
 });
 
 
+// Bot Ready Event
+
 client.once('clientReady', () => {
     console.log(`Logged in as ${client.user.tag}! CTRL + C to exit`);
     console.log(`${client.commands.size} commands loaded`);
 });
 
+
+// Bot Login
 client.login(botToken).catch(err => {
     console.error("Login Failed", err);
 });
 
+// Shut down signal for local dev
 process.on('SIGINT', () => {
     console.log("Shutting down the bot.");
     client.destroy();

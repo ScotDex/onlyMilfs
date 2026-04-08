@@ -7,8 +7,9 @@ module.exports = {
         .setDescription('wolf clip'),
 
     async execute(interaction) {
+        await interaction.deferReply();
         const file = path.join(__dirname, '..', 'assets', 'clips', 'wolf.gif');
         const attachment = new AttachmentBuilder(file, { name: 'wolf.gif' });
-        await interaction.reply({ files: [attachment] });
+        await interaction.editReply({ files: [attachment] });
     }
 };

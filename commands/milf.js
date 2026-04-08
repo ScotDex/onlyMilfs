@@ -10,6 +10,7 @@ module.exports = {
         .setDescription('Milf Inbound'),
 
     async execute(interaction) {
+        await interaction.deferReply();
         const files = fs.readdirSync(imagesDir).filter(f => /\.(jpg|jpeg|png|gif|webp)$/i.test(f));
         const pick = files[Math.floor(Math.random() * files.length)];
 
@@ -18,6 +19,6 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setImage(`attachment://${pick}`)
             .setColor(0x0099FF);
-        await interaction.reply({ embeds: [embed], files: [attachment] });
+        await interaction.editReply({ embeds: [embed], files: [attachment] });
     }
 }

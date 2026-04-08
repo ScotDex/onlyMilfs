@@ -1,7 +1,7 @@
 services:
-  scout-bot:
+  taylr-bot:
     build: .
-    container_name: thera-scout-bot
+    container_name: onlymilfs-bot
     restart: always
     # Automatically loads variables from your .env file
     env_file:
